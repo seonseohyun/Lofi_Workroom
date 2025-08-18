@@ -25,22 +25,18 @@
                 b:DragInCanvasBehavior.ClampToParent="True"
                 b:DragInCanvasBehavior.IgnoreInteractiveChildren="True"
                 DataContext="{Binding TodoListViewModel}"/>
-            <views:MusicPlayer
-                Canvas.Left="400" Canvas.Top="200"
-                Width="320" Height="220"
-                DataContext="{Binding MusicPlayer}"
-                b:DragInCanvasBehavior.IsEnabled="True"
-                b:DragInCanvasBehavior.BringToFront="True"
-                b:DragInCanvasBehavior.ClampToParent="True"/>
-
         </Canvas>
 
         <Button Command="{Binding ToggleThemeCommand}"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
-                Margin="20,20,25,20"
-                Style="{StaticResource Button.Primary.Rounded}">
-            <Image Source="{Binding ToggleButtonImageSource}" Width="48" Height="48"/>
+                Margin="0,0,30,30"
+                Style="{StaticResource Button.Icon.Ghost}"
+                Width="50" Height="50">
+            <Image Source="{Binding ToggleButtonImageSource}"
+                    Width="50" Height="50"
+                    RenderOptions.BitmapScalingMode="NearestNeighbor"
+                    SnapsToDevicePixels="True"/>
         </Button>
     </Grid>
 </Window>
