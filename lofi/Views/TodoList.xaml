@@ -292,20 +292,17 @@
 
                     <TextBox Grid.Column="0"
                         Margin="0,0,8,0"
-                        Style="{StaticResource TodoTextBox}"
-                        Text="{Binding NewTodoText, UpdateSourceTrigger=PropertyChanged}"
-                        AcceptsReturn="False">
-                        <TextBox.InputBindings>
-                            <!-- 엔터로 추가 -->
-                            <KeyBinding Key="Enter" Command="{Binding AddTodoCommand}"/>
-                        </TextBox.InputBindings>
-                    </TextBox>
+                        Style="{StaticResource Input.TextBox.Rounded}"
+                        Text="{Binding NewTodoText, UpdateSourceTrigger=PropertyChanged}">
+                                    <TextBox.InputBindings>
+                                        <KeyBinding Key="Enter" Command="{Binding AddTodoCommand}"/>
+                                    </TextBox.InputBindings>
+                                </TextBox>
 
                     <Button Grid.Column="1"
-                            Content="추가"
-                            Style="{StaticResource AddButton}"
-                            Command="{Binding AddTodoCommand}"/>
-
+                        Content="추가"
+                        Style="{StaticResource Button.Primary.Rounded}"
+                        Command="{Binding AddTodoCommand}"/>
 
                 </Grid>
             </Grid>

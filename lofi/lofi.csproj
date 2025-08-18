@@ -17,4 +17,26 @@
   <ItemGroup>
     <Resource Include="Resources\**\*.*" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Resource Remove="Resources\Music\track1.mp3" />
+    <Resource Remove="Resources\Music\track2.mp3" />
+    <Resource Remove="Resources\Music\track3.mp3" />
+    <Resource Remove="Resources\Music\track4.mp3" />
+    <Resource Remove="Resources\Music\track5.mp3" />
+    <Resource Remove="Resources\Music\track6.mp3" />
+    <Resource Remove="Resources\Music\track7.mp3" />
+    <Resource Remove="Resources\Music\track8.mp3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\Music\track1.mp3" />
+    <Content Include="Resources\Music\track2.mp3" />
+    <Content Include="Resources\Music\track3.mp3" />
+    <Content Include="Resources\Music\track4.mp3" />
+    <Content Include="Resources\Music\track5.mp3" />
+    <Content Include="Resources\Music\track6.mp3" />
+    <Content Include="Resources\Music\track7.mp3" />
+    <Content Include="Resources\Music\track8.mp3" />
+  </ItemGroup>
 </Project>

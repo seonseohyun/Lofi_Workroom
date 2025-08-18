@@ -1,0 +1,73 @@
+﻿<UserControl x:Class="lofi.Views.MusicPlayer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:b="clr-namespace:lofi.Behavior">
+    
+    <UserControl.Resources>
+        <!-- 항상 투명한 리사이즈 핸들 -->
+        <Style x:Key="InvisibleResizeThumb" TargetType="Thumb">
+            <Setter Property="OverridesDefaultStyle" Value="True"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Rectangle Fill="{TemplateBinding Background}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        
+        <!-- 카드 -->
+        <Border CornerRadius="14" Padding="14" Background="#F9FAFF" BorderBrush="#E3E6F0" BorderThickness="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!-- 헤더 -->
+                    <RowDefinition Height="*"/>
+                    <!-- 내용 -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- 컨트롤 -->
+                </Grid.RowDefinitions>
+
+                <!-- 헤더(여기만 드래그 Grip) -->
+                <Border Grid.Row="0" Background="Transparent" 
+                        b:DragInCanvasBehavior.IsDragGrip="True">
+                    <TextBlock Text="MUSIC PLAYER" 
+                               FontSize="16" FontWeight="Bold" 
+                               Foreground="#333" />
+                </Border>
+
+                <!-- 트랙 리스트 -->
+                <ListBox Grid.Row="1" 
+                         ItemsSource="{Binding Tracks}" 
+                         SelectedItem="{Binding CurrentTrack, Mode=TwoWay}"
+                         Background="Transparent" BorderThickness="0" />
+
+                <!-- 컨트롤 버튼 -->
+                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+                    <Button Content="⏮" Command="{Binding PrevCommand}" Margin="5"/>
+                    <Button Content="{Binding PlayPauseLabel}" Command="{Binding PlayPauseCommand}" Margin="5"/>
+                    <Button Content="⏭" Command="{Binding NextCommand}" Margin="5"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- 리사이즈 핸들 오버레이 (Todo랑 동일하게) -->
+        <Border CornerRadius="14" Background="{x:Null}" ClipToBounds="True" SnapsToDevicePixels="True">
+            <Grid IsHitTestVisible="True">
+                <Thumb Style="{StaticResource InvisibleResizeThumb}" Width="6"  HorizontalAlignment="Left"   Cursor="SizeWE"   DragDelta="ResizeLeft_OnDragDelta"/>
+                <Thumb Style="{StaticResource InvisibleResizeThumb}" Width="6"  HorizontalAlignment="Right"  Cursor="SizeWE"   DragDelta="ResizeRight_OnDragDelta"/>
+                <Thumb Style="{StaticResource InvisibleResizeThumb}" Height="6" VerticalAlignment="Top"      Cursor="SizeNS"   DragDelta="ResizeTop_OnDragDelta"/>
+                <Thumb Style="{StaticResource InvisibleResizeThumb}" Height="6" VerticalAlignment="Bottom"   Cursor="SizeNS"   DragDelta="ResizeBottom_OnDragDelta"/>
+                <!-- 코너 -->
+                <Thumb Style="{StaticResource InvisibleResizeThumb}" Width="12" Height="12" HorizontalAlignment="Left"  VerticalAlignment="Top"    Cursor="SizeNWSE" DragDelta="ResizeTopLeft_OnDragDelta"/>
+                <Thumb Style="{StaticResource InvisibleResizeThumb}" Width="12" Height="12" HorizontalAlignment="Right" VerticalAlignment="Top"    Cursor="SizeNESW" DragDelta="ResizeTopRight_OnDragDelta"/>
+                <Thumb Style="{StaticResource InvisibleResizeThumb}" Width="12" Height="12" HorizontalAlignment="Left"  VerticalAlignment="Bottom" Cursor="SizeNESW" DragDelta="ResizeBottomLeft_OnDragDelta"/>
+                <Thumb Style="{StaticResource InvisibleResizeThumb}" Width="12" Height="12" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="ResizeBottomRight_OnDragDelta"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
