@@ -1,0 +1,38 @@
+<Window x:Class="lofi.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:views="clr-namespace:lofi.Views"
+        xmlns:vm="clr-namespace:lofi.ViewModels"
+        xmlns:b="clr-namespace:lofi.Behavior"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type={x:Type vm:MainViewModel}, IsDesignTimeCreatable=False}"
+        Title="Lofi Room" Width="900" Height="600">
+
+    <Window.Background>
+        <ImageBrush ImageSource="{Binding CurrentBackgroundImageSource}"
+                    Stretch="UniformToFill"/>
+    </Window.Background>
+
+    <Grid>
+        <Canvas x:Name="StickerHost">
+            <views:TodoList
+                Canvas.Left="65" Canvas.Top="165"
+                Width="226" Height="328"
+                b:DragInCanvasBehavior.IsEnabled="True"
+                b:DragInCanvasBehavior.BringToFront="True"
+                b:DragInCanvasBehavior.ClampToParent="True"
+                b:DragInCanvasBehavior.IgnoreInteractiveChildren="True"
+                DataContext="{Binding TodoListViewModel}"/>
+        </Canvas>
+
+        <Button Command="{Binding ToggleThemeCommand}"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Bottom"
+                Margin="20,20,25,20"
+                Style="{StaticResource ToggleButtonStyle}">
+            <Image Source="{Binding ToggleButtonImageSource}" Width="48" Height="48"/>
+        </Button>
+    </Grid>
+</Window>
