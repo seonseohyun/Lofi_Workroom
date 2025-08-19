@@ -1,108 +1,102 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using lofi.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace lofi.Views
 {
     public partial class MusicPlayer : UserControl
-{
-    private const double MinW = 260;
-    private const double MinH = 180;
-
-    public MusicPlayer()
     {
-        InitializeComponent();
-    }
+        private bool _dragging;
+        private Point _dragStart;
+        private Point _origin;
 
-    // 부모 Canvas 찾기
-    private Canvas? HostCanvas()
-    {
-        DependencyObject d = this;
-        while (d != null && d is not Canvas)
-            d = VisualTreeHelper.GetParent(d);
-        return d as Canvas;
-    }
-
-    // === 변 리사이즈 ===
-    private void ResizeLeft_OnDragDelta(object sender, DragDeltaEventArgs e)
-    {
-        double newW = System.Math.Max(MinW, ActualWidth - e.HorizontalChange);
-        double dx = ActualWidth - newW;
-        Width = newW;
-
-        var canvas = HostCanvas();
-        if (canvas != null)
+        public MusicPlayer()
         {
-            double left = Canvas.GetLeft(this);
-            if (double.IsNaN(left)) left = 0;
-            Canvas.SetLeft(this, left + dx);
+            InitializeComponent();
+            DataContext = new MusicPlayerViewModel(); // 기본 서비스로 VM 구성
+            Loaded += (s, e) =>
+            {
+                if (double.IsNaN(Canvas.GetLeft(this))) Canvas.SetLeft(this, 0);
+                if (double.IsNaN(Canvas.GetTop(this))) Canvas.SetTop(this, 0);
+            };
         }
-        e.Handled = true;
-    }
 
-    private void ResizeRight_OnDragDelta(object sender, DragDeltaEventArgs e)
-    {
-        Width = System.Math.Max(MinW, ActualWidth + e.HorizontalChange);
-        e.Handled = true;
-    }
-
-    private void ResizeTop_OnDragDelta(object sender, DragDeltaEventArgs e)
-    {
-        double newH = System.Math.Max(MinH, ActualHeight - e.VerticalChange);
-        double dy = ActualHeight - newH;
-        Height = newH;
-
-        var canvas = HostCanvas();
-        if (canvas != null)
+        // Slider ValueChanged 핸들러 (필요 없으면 XAML에서 제거)
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            double top = Canvas.GetTop(this);
-            if (double.IsNaN(top)) top = 0;
-            Canvas.SetTop(this, top + dy);
+            // 예시) 드래그 중 시킹 반영 등. 바인딩만으로 충분하면 비워두셔도 됩니다.
+            // var vm = DataContext as YourMusicViewModel;
+            // vm?.SeekToSeconds(e.NewValue);
         }
-        e.Handled = true;
-    }
 
-    private void ResizeBottom_OnDragDelta(object sender, DragDeltaEventArgs e)
-    {
-        Height = System.Math.Max(MinH, ActualHeight + e.VerticalChange);
-        e.Handled = true;
-    }
+        // ===== 드래그 =====
+        private void OnDragStart(object sender, MouseButtonEventArgs e)
+        {
+            _dragging = true;
+            _dragStart = e.GetPosition(null);
+            _origin = new Point(Canvas.GetLeft(this), Canvas.GetTop(this));
+            CaptureMouse();
+        }
 
-    // === 코너 리사이즈(조합) ===
-    private void ResizeTopLeft_OnDragDelta(object sender, DragDeltaEventArgs e)
-    {
-        ResizeLeft_OnDragDelta(sender, e);
-        ResizeTop_OnDragDelta(sender, e);
-    }
+        private void OnDragMove(object sender, MouseEventArgs e)
+        {
+            if (!_dragging) return;
 
-    private void ResizeTopRight_OnDragDelta(object sender, DragDeltaEventArgs e)
-    {
-        ResizeRight_OnDragDelta(sender, e);
-        ResizeTop_OnDragDelta(sender, e);
-    }
+            var current = e.GetPosition(null);
+            var dx = current.X - _dragStart.X;
+            var dy = current.Y - _dragStart.Y;
 
-    private void ResizeBottomLeft_OnDragDelta(object sender, DragDeltaEventArgs e)
-    {
-        ResizeLeft_OnDragDelta(sender, e);
-        ResizeBottom_OnDragDelta(sender, e);
-    }
+            var left = double.IsNaN(_origin.X) ? 0 : _origin.X;
+            var top = double.IsNaN(_origin.Y) ? 0 : _origin.Y;
 
-    private void ResizeBottomRight_OnDragDelta(object sender, DragDeltaEventArgs e)
-    {
-        ResizeRight_OnDragDelta(sender, e);
-        ResizeBottom_OnDragDelta(sender, e);
+            var canvas = FindParentCanvas(this);
+            if (canvas != null)
+            {
+                double newLeft = left + dx;
+                double newTop = top + dy;
+
+                // 부모 Canvas 안으로 클램프 (원하면 제거 가능)
+                newLeft = Math.Max(0, Math.Min(newLeft, Math.Max(0, canvas.ActualWidth - ActualWidth)));
+                newTop = Math.Max(0, Math.Min(newTop, Math.Max(0, canvas.ActualHeight - ActualHeight)));
+
+                Canvas.SetLeft(this, newLeft);
+                Canvas.SetTop(this, newTop);
+            }
+            else
+            {
+                // Canvas가 아니라면 Margin으로 이동 (fallback)
+                var m = Margin;
+                Margin = new Thickness(m.Left + dx, m.Top + dy, m.Right - dx, m.Bottom - dy);
+                _dragStart = current; // 누적 이동
+            }
+        }
+
+        private void OnDragEnd(object sender, MouseButtonEventArgs e)
+        {
+            _dragging = false;
+            if (IsMouseCaptured) ReleaseMouseCapture();
+        }
+
+        private static Canvas? FindParentCanvas(DependencyObject d)
+        {
+            DependencyObject? p = d;
+            while (p != null && p is not Canvas)
+                p = VisualTreeHelper.GetParent(p);
+            return p as Canvas;
+        }
+        // MusicPlayer.xaml.cs
+
+        private void Slider_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (DataContext is MusicPlayerViewModel vm) vm.BeginSeek();
+        }
+
+        private void Slider_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            if (DataContext is MusicPlayerViewModel vm) vm.EndSeek();
+        }
+
     }
-}
 }

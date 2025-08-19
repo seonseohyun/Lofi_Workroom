@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows7.0</TargetFramework>
@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+    <PackageReference Include="TagLibSharp" Version="2.3.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +20,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Remove="Resources\Music\lazy sunday chill lofi.mp3" />
+    <Resource Remove="Resources\Music\lazy sunday chill lofi.png" />
+    <Resource Remove="Resources\Music\lofi background.mp3" />
+    <Resource Remove="Resources\Music\lofi girl.mp3" />
+    <Resource Remove="Resources\Music\lofi girl.png" />
+    <Resource Remove="Resources\Music\lofi hiphop.mp3" />
+    <Resource Remove="Resources\Music\lofi hiphop.png" />
+    <Resource Remove="Resources\Music\rainy lofi.mp3" />
+    <Resource Remove="Resources\Music\rainy lofi.png" />
+    <Resource Remove="Resources\Music\spring vibes.mp3" />
+    <Resource Remove="Resources\Music\spring vibes.png" />
+    <Resource Remove="Resources\Music\stormy night coding.mp3" />
+    <Resource Remove="Resources\Music\stormy night coding.png" />
     <Resource Remove="Resources\Music\track1.mp3" />
     <Resource Remove="Resources\Music\track2.mp3" />
     <Resource Remove="Resources\Music\track3.mp3" />
@@ -27,16 +41,52 @@
     <Resource Remove="Resources\Music\track6.mp3" />
     <Resource Remove="Resources\Music\track7.mp3" />
     <Resource Remove="Resources\Music\track8.mp3" />
+    <Resource Remove="Resources\Music\warm breeze lofi.mp3" />
+    <Resource Remove="Resources\Music\warm breeze lofi.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Resources\Music\track1.mp3" />
-    <Content Include="Resources\Music\track2.mp3" />
-    <Content Include="Resources\Music\track3.mp3" />
-    <Content Include="Resources\Music\track4.mp3" />
-    <Content Include="Resources\Music\track5.mp3" />
-    <Content Include="Resources\Music\track6.mp3" />
-    <Content Include="Resources\Music\track7.mp3" />
-    <Content Include="Resources\Music\track8.mp3" />
+    <Content Include="Resources\Music\lazy sunday chill lofi.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Music\lazy sunday chill lofi.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Music\lofi girl.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Music\lofi girl.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Music\lofi hiphop.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Music\lofi hiphop.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Music\rainy lofi.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Music\rainy lofi.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Music\spring vibes.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Music\spring vibes.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Music\stormy night coding.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Music\stormy night coding.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Music\warm breeze lofi.mp3">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Music\warm breeze lofi.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

@@ -9,5 +9,10 @@ namespace lofi
             InitializeComponent();
             DataContext = new ViewModels.MainViewModel();
         }
+
+        private void MusicPlayer_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -1,43 +1,226 @@
 ﻿<UserControl x:Class="lofi.Views.MusicPlayer"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:b="clr-namespace:lofi.Behavior">
-    
-    <Grid>
-        
-        <!-- 카드 -->
-        <Border CornerRadius="14" Padding="14" Background="#F9FAFF" BorderBrush="#E3E6F0" BorderThickness="1">
-            <Grid>
+             xmlns:b="clr-namespace:lofi.Behavior"
+             b:DragInCanvasBehavior.IsEnabled="True"
+             b:DragInCanvasBehavior.BringToFront="True"
+             b:DragInCanvasBehavior.ClampToParent="True"
+             Width="520" Height="220"
+             MinWidth="520" MaxWidth="520"
+             MinHeight="220" MaxHeight="220">
+
+
+    <!-- 루트 Grid: 드래그 이벤트 3개 필수 -->
+    <Grid x:Name="Root"
+        Background="Transparent">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="24"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 헤더 = 드래그 시작 영역(Grip) -->
+        <Border Grid.Row="0"
+            Background="#01000000"
+            Cursor="SizeAll"
+            b:DragInCanvasBehavior.IsDragGrip="True"/>
+
+        <!-- 카드 배경은 전체 덮기 -->
+        <Border Grid.RowSpan="2" Style="{StaticResource Card.Container}"/>
+
+        <!-- 드래그 핸들 -->
+        <Border Grid.Row="0" Background="#01000000" Cursor="SizeAll"
+        b:DragInCanvasBehavior.IsDragGrip="True"/>
+
+
+        <!-- 본문 레이아웃 -->
+        <Grid Grid.Row="1" Margin="16" Panel.ZIndex="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="140"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- (좌) 앨범 커버: 플레이스홀더 + 커버 2겹 -->
+            <Grid Grid.Column="0" Width="140" Height="140">
+                <Rectangle RadiusX="12" RadiusY="12" Fill="#112E3440"/>
+                <Rectangle RadiusX="12" RadiusY="12">
+                    <Rectangle.Fill>
+                        <ImageBrush ImageSource="{Binding CoverImage}" Stretch="UniformToFill"/>
+                    </Rectangle.Fill>
+                    <Rectangle.Style>
+                        <Style TargetType="Rectangle">
+                            <Setter Property="Opacity" Value="1"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CoverImage}" Value="{x:Null}">
+                                    <Setter Property="Opacity" Value="0"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Rectangle.Style>
+                </Rectangle>
+            </Grid>
+
+            <!-- (우측 컨텐츠) 위 여유 / 제목(플레이버튼 위, 중앙) / 버튼 / 플레이바 -->
+            <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <!-- 헤더 -->
                     <RowDefinition Height="*"/>
-                    <!-- 내용 -->
+                    <!-- 위 여유 -->
                     <RowDefinition Height="Auto"/>
-                    <!-- 컨트롤 -->
+                    <!-- 제목 -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- 버튼 -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- 바+시간 -->
                 </Grid.RowDefinitions>
 
-                <!-- 헤더(여기만 드래그 Grip) -->
-                <Border Grid.Row="0" Background="Transparent" 
-                        b:DragInCanvasBehavior.IsDragGrip="True">
-                    <TextBlock Text="MUSIC PLAYER" 
-                               FontSize="16" FontWeight="Bold" 
-                               Foreground="#333" />
-                </Border>
+                <!-- 제목: 버튼 그리드와 정렬 맞춤(가운데 칸) -->
+                <Grid Grid.Row="1" Margin="0,0,0,6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <!-- ★ 플레이 버튼 칸 -->
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                <!-- 트랙 리스트 -->
-                <ListBox Grid.Row="1" 
-                         ItemsSource="{Binding Tracks}" 
-                         SelectedItem="{Binding CurrentTrack, Mode=TwoWay}"
-                         Background="Transparent" BorderThickness="0" />
+                    <TextBlock Grid.Column="2"
+                     Text="{Binding TrackTitle}"
+                     FontWeight="SemiBold" FontSize="14"
+                     TextTrimming="CharacterEllipsis"
+                     HorizontalAlignment="Center">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="#2E3440"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
+                                                 RelativeSource={RelativeSource AncestorType=Window}}"
+                               Value="#FFFFFFFF">
+                                        <Setter Property="Foreground" Value="#ECEFF4"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
 
-                <!-- 컨트롤 버튼 -->
-                <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
-                    <Button Content="⏮" Command="{Binding PrevCommand}" Margin="5"/>
-                    <Button Content="{Binding PlayPauseLabel}" Command="{Binding PlayPauseCommand}" Margin="5"/>
-                    <Button Content="⏭" Command="{Binding NextCommand}" Margin="5"/>
+                <!-- 버튼 (가운데: Play/Pause) -->
+                <Grid Grid.Row="2" Margin="20,8,20,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" MinWidth="72"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto" MinWidth="61"/>
+                        <!-- ★ 플레이 버튼 칸 -->
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto" MinWidth="69"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Prev -->
+                    <Button Grid.Column="0" Style="{StaticResource Button.Icon.Ghost}"
+                  Command="{Binding PrevCommand}">
+                        <Image Width="40" Height="40"
+                   Style="{StaticResource Img.Prev.Theme}"
+                   RenderOptions.BitmapScalingMode="NearestNeighbor"
+                   SnapsToDevicePixels="True"/>
+                    </Button>
+
+                    <!-- Play/Pause -->
+                    <Button Grid.Column="2" Style="{StaticResource Button.Icon.Ghost}"
+                  Command="{Binding PlayPauseCommand}">
+                        <Grid>
+                            <!-- Play -->
+                            <Image
+                     RenderOptions.BitmapScalingMode="NearestNeighbor"
+                     SnapsToDevicePixels="True" Margin="0,0,-12,-8">
+                                <Image.Style>
+                                    <Style TargetType="Image" BasedOn="{StaticResource Img.Play.Theme}">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsPlaying}" Value="True">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                            <!-- Pause -->
+                            <Image Width="48" Height="48"
+                     RenderOptions.BitmapScalingMode="NearestNeighbor"
+                     SnapsToDevicePixels="True">
+                                <Image.Style>
+                                    <Style TargetType="Image" BasedOn="{StaticResource Img.Pause.Theme}">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsPlaying}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </Grid>
+                    </Button>
+
+                    <!-- Next -->
+                    <Button Grid.Column="4" Style="{StaticResource Button.Icon.Ghost}"
+                  Command="{Binding NextCommand}">
+                        <Image Width="40" Height="40"
+                   Style="{StaticResource Img.Next.Theme}"
+                   RenderOptions.BitmapScalingMode="NearestNeighbor"
+                   SnapsToDevicePixels="True"/>
+                    </Button>
+                </Grid>
+
+                <!-- 플레이바 + 시간 -->
+                <StackPanel Grid.Row="3" Orientation="Vertical" Margin="0">
+                    <Slider Style="{StaticResource Slider.Mini}"
+                         Minimum="0"
+                         Maximum="{Binding DurationSeconds}"
+                         Value="{Binding PositionSeconds, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                         IsMoveToPointEnabled="True"
+                         Height="23"
+                         PreviewMouseDown="Slider_PreviewMouseDown"
+                         PreviewMouseUp="Slider_PreviewMouseUp"/>
+                    <Grid>
+                        <!--  두 칼럼 필요 (원래 한 개라 짤렸음) -->
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="{Binding PositionText}" FontSize="11" Opacity="0.85"
+                       HorizontalAlignment="Left">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="#4C566A"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
+                                                   RelativeSource={RelativeSource AncestorType=Window}}"
+                                 Value="#FFFFFFFF">
+                                            <Setter Property="Foreground" Value="#C7D0DC"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <TextBlock Grid.Column="1" Text="{Binding DurationText}" FontSize="11" Opacity="0.85"
+                       HorizontalAlignment="Right">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="#4C566A"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
+                                                   RelativeSource={RelativeSource AncestorType=Window}}"
+                                 Value="#FFFFFFFF">
+                                            <Setter Property="Foreground" Value="#C7D0DC"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
                 </StackPanel>
             </Grid>
-        </Border>
+        </Grid>
     </Grid>
 </UserControl>

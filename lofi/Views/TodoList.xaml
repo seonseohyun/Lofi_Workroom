@@ -1,14 +1,15 @@
 <UserControl x:Class="lofi.Views.TodoList"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:vm="clr-namespace:lofi.ViewModels"
-             xmlns:b="clr-namespace:lofi.Behavior"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+
+    xmlns:vm="clr-namespace:lofi.ViewModels"
+    xmlns:b="clr-namespace:lofi.Behavior"
 
     mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance Type={x:Type vm:TodoListViewModel}, IsDesignTimeCreatable=False}"
-             Width="240" Height="340">
+    d:DataContext="{d:DesignInstance Type={x:Type vm:TodoListViewModel}, IsDesignTimeCreatable=False}"
+    Width="240" Height="340">
 
 
     <!-- ============= THEME-AWARE STYLES/RESOURCES ============= -->
@@ -237,7 +238,7 @@
 
                 <!-- 헤더 -->
                 <Border Grid.Row="0" Background="Transparent"
-        b:DragInCanvasBehavior.IsDragGrip="True">
+                    b:DragInCanvasBehavior.IsDragGrip="True">
                     <TextBlock Text="TO-DO"
              FontSize="18" FontWeight="Bold"
              Margin="4,2,4,10"

@@ -17,7 +17,7 @@
 
     <Grid>
         <Canvas x:Name="StickerHost">
-            <views:TodoList
+            <views:TodoList 
                 Canvas.Left="65" Canvas.Top="165"
                 Width="226" Height="328"
                 b:DragInCanvasBehavior.IsEnabled="True"
@@ -25,6 +25,14 @@
                 b:DragInCanvasBehavior.ClampToParent="True"
                 b:DragInCanvasBehavior.IgnoreInteractiveChildren="True"
                 DataContext="{Binding TodoListViewModel}"/>
+
+            <views:MusicPlayer 
+                Canvas.Left="350" Canvas.Top="165"
+                b:DragInCanvasBehavior.IsEnabled="True"
+                b:DragInCanvasBehavior.BringToFront="True"
+                b:DragInCanvasBehavior.ClampToParent="True"
+                b:DragInCanvasBehavior.IgnoreInteractiveChildren="True"
+                DataContext="{Binding MusicPlayerViewModel}" Loaded="MusicPlayer_Loaded"/>
         </Canvas>
 
         <Button Command="{Binding ToggleThemeCommand}"
@@ -38,5 +46,6 @@
                     RenderOptions.BitmapScalingMode="NearestNeighbor"
                     SnapsToDevicePixels="True"/>
         </Button>
+
     </Grid>
 </Window>
