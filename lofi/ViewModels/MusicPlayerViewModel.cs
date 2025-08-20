@@ -19,11 +19,13 @@ namespace lofi.ViewModels
         public ObservableCollection<Track> Tracks { get; } = new();
 
         // === 바인딩 프로퍼티 ===
-        private string _trackTitle = "";
+        private string _trackTitle = "[VM READY]";   // 실행하면 제목에 바로 떠야 정상 (나중에 지워도 됨)
+
         public string TrackTitle
         {
             get => _trackTitle;
             private set => SetProperty(ref _trackTitle, value);
+
         }
 
         private ImageSource? _coverImage;

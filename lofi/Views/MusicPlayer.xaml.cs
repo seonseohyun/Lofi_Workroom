@@ -1,102 +1,50 @@
-﻿using lofi.ViewModels;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
+using lofi.ViewModels;
 
 namespace lofi.Views
 {
     public partial class MusicPlayer : UserControl
     {
-        private bool _dragging;
-        private Point _dragStart;
-        private Point _origin;
+        // 이 VM만 보게 고정
+        private readonly MusicPlayerViewModel _vm = new();
 
         public MusicPlayer()
         {
             InitializeComponent();
-            DataContext = new MusicPlayerViewModel(); // 기본 서비스로 VM 구성
-            Loaded += (s, e) =>
+
+            // 디자이너에서는 무거운 초기화 피하고, 런타임에는 루트 Grid에 로컬값으로 DC 고정
+            if (!DesignerProperties.GetIsInDesignMode(this))
             {
-                if (double.IsNaN(Canvas.GetLeft(this))) Canvas.SetLeft(this, 0);
-                if (double.IsNaN(Canvas.GetTop(this))) Canvas.SetTop(this, 0);
-            };
-        }
+                // ★ 부모/스타일이 덮어써도 Root 이하에서는 절대 안 바뀜
+                Root.DataContext = _vm;
 
-        // Slider ValueChanged 핸들러 (필요 없으면 XAML에서 제거)
-        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            // 예시) 드래그 중 시킹 반영 등. 바인딩만으로 충분하면 비워두셔도 됩니다.
-            // var vm = DataContext as YourMusicViewModel;
-            // vm?.SeekToSeconds(e.NewValue);
-        }
+                // 누가 바꾸면 즉시 되돌리기(한 번만 고정하고 끝낼 거면 아래 3줄은 생략해도 됨)
+                Root.DataContextChanged += (s, e) =>
+                {
+                    if (!ReferenceEquals(Root.DataContext, _vm))
+                        Root.DataContext = _vm;
+                };
 
-        // ===== 드래그 =====
-        private void OnDragStart(object sender, MouseButtonEventArgs e)
-        {
-            _dragging = true;
-            _dragStart = e.GetPosition(null);
-            _origin = new Point(Canvas.GetLeft(this), Canvas.GetTop(this));
-            CaptureMouse();
-        }
-
-        private void OnDragMove(object sender, MouseEventArgs e)
-        {
-            if (!_dragging) return;
-
-            var current = e.GetPosition(null);
-            var dx = current.X - _dragStart.X;
-            var dy = current.Y - _dragStart.Y;
-
-            var left = double.IsNaN(_origin.X) ? 0 : _origin.X;
-            var top = double.IsNaN(_origin.Y) ? 0 : _origin.Y;
-
-            var canvas = FindParentCanvas(this);
-            if (canvas != null)
-            {
-                double newLeft = left + dx;
-                double newTop = top + dy;
-
-                // 부모 Canvas 안으로 클램프 (원하면 제거 가능)
-                newLeft = Math.Max(0, Math.Min(newLeft, Math.Max(0, canvas.ActualWidth - ActualWidth)));
-                newTop = Math.Max(0, Math.Min(newTop, Math.Max(0, canvas.ActualHeight - ActualHeight)));
-
-                Canvas.SetLeft(this, newLeft);
-                Canvas.SetTop(this, newTop);
+                Loaded += (_, __) =>
+                {
+                    Debug.WriteLine($"[MusicPlayer] DC={Root.DataContext?.GetType().Name ?? "null"}, Tracks={_vm.Tracks.Count}, Title={_vm.TrackTitle}");
+                    if (double.IsNaN(Canvas.GetLeft(this))) Canvas.SetLeft(this, 0);
+                    if (double.IsNaN(Canvas.GetTop(this))) Canvas.SetTop(this, 0);
+                };
             }
             else
             {
-                // Canvas가 아니라면 Margin으로 이동 (fallback)
-                var m = Margin;
-                Margin = new Thickness(m.Left + dx, m.Top + dy, m.Right - dx, m.Bottom - dy);
-                _dragStart = current; // 누적 이동
+                // 디자이너에서도 바인딩 깨지지 않게 임시 고정
+                Root.DataContext = _vm;
             }
         }
 
-        private void OnDragEnd(object sender, MouseButtonEventArgs e)
-        {
-            _dragging = false;
-            if (IsMouseCaptured) ReleaseMouseCapture();
-        }
-
-        private static Canvas? FindParentCanvas(DependencyObject d)
-        {
-            DependencyObject? p = d;
-            while (p != null && p is not Canvas)
-                p = VisualTreeHelper.GetParent(p);
-            return p as Canvas;
-        }
-        // MusicPlayer.xaml.cs
-
-        private void Slider_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (DataContext is MusicPlayerViewModel vm) vm.BeginSeek();
-        }
-
-        private void Slider_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            if (DataContext is MusicPlayerViewModel vm) vm.EndSeek();
-        }
-
+        // 슬라이더 드래그(시킹)만 전달
+        private void Slider_PreviewMouseDown(object sender, MouseButtonEventArgs e) => _vm.BeginSeek();
+        private void Slider_PreviewMouseUp(object sender, MouseButtonEventArgs e) => _vm.EndSeek();
     }
 }

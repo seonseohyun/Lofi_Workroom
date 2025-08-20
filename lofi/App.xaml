@@ -4,437 +4,492 @@
              xmlns:b="clr-namespace:lofi.Behavior"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <ResourceDictionary>
 
-            <Style x:Key="Widget.Draggable" TargetType="{x:Type FrameworkElement}">
-                <Setter Property="b:DragInCanvasBehavior.IsEnabled" Value="True"/>
-                <Setter Property="b:DragInCanvasBehavior.BringToFront" Value="True"/>
-                <Setter Property="b:DragInCanvasBehavior.ClampToParent" Value="True"/>
-                <Setter Property="b:DragInCanvasBehavior.IgnoreInteractiveChildren" Value="True"/>
-            </Style>
+        <FontFamily x:Key="App.FontFamily">/lofi;component/Resources/Font/#DungGeunMo</FontFamily>
 
-            <!-- ===== Dark theme brushes (put these near top of ResourceDictionary) ===== -->
-            <SolidColorBrush x:Key="AccentBrush" Color="#81A1C1"/>
+        <Style TargetType="{x:Type TextElement}">
+            <Setter Property="FontFamily" Value="{StaticResource App.FontFamily}"/>
+        </Style>
+        <Style TargetType="{x:Type Paragraph}">
+            <Setter Property="FontFamily" Value="{StaticResource App.FontFamily}"/>
+        </Style>
 
-            <SolidColorBrush x:Key="Dark.Text" Color="#ECECEC"/>
+        <!--  BasedOn  -->
+        <Style x:Key="App.ControlBase" TargetType="{x:Type Control}">
+            <Setter Property="FontFamily" Value="{StaticResource App.FontFamily}"/>
+            <Setter Property="FontSize"   Value="13"/>
+            <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+            <Setter Property="TextOptions.TextRenderingMode"  Value="Auto"/>
+            <Setter Property="TextOptions.TextHintingMode"    Value="Auto"/>
+        </Style>
+        <Style x:Key="App.TextBlockBase" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontFamily" Value="{StaticResource App.FontFamily}"/>
+            <Setter Property="FontSize"   Value="13"/>
+            <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
+            <Setter Property="TextOptions.TextRenderingMode"  Value="Auto"/>
+            <Setter Property="TextOptions.TextHintingMode"    Value="Auto"/>
+        </Style>
 
-            <SolidColorBrush x:Key="Dark.InputBg" Color="#242938"/>
-            <SolidColorBrush x:Key="Dark.InputBg.Hover" Color="#2A2F3E"/>
-            <SolidColorBrush x:Key="Dark.InputBorder" Color="#3A4156"/>
+        <Style TargetType="{x:Type Control}"   BasedOn="{StaticResource App.ControlBase}"/>
+        <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource App.TextBlockBase}"/>
 
-            <SolidColorBrush x:Key="Dark.ButtonBg" Color="#30354A"/>
-            <SolidColorBrush x:Key="Dark.ButtonBg.Hover" Color="#373C53"/>
-            <SolidColorBrush x:Key="Dark.ButtonBg.Pressed" Color="#2B3044"/>
 
-            <SolidColorBrush x:Key="Dark.ButtonBorder" Color="#3C415A"/>
-            <SolidColorBrush x:Key="Slider.TrackBg.Light" Color="#E3E6F0"/>
-            <SolidColorBrush x:Key="Slider.Fill.Light"     Color="#FF81A1C1"/>
-            <SolidColorBrush x:Key="Slider.Thumb.Light"    Color="#FFFFFF"/>
+        <Style x:Key="Widget.Draggable" TargetType="{x:Type FrameworkElement}">
+            <Setter Property="b:DragInCanvasBehavior.IsEnabled" Value="True"/>
+            <Setter Property="b:DragInCanvasBehavior.BringToFront" Value="True"/>
+            <Setter Property="b:DragInCanvasBehavior.ClampToParent" Value="True"/>
+            <Setter Property="b:DragInCanvasBehavior.IgnoreInteractiveChildren" Value="True"/>
+        </Style>
+        
+        <Style TargetType="{x:Type ItemsControl}">
+            <Setter Property="FontFamily" Value="{StaticResource App.FontFamily}"/>
+            <Setter Property="FontSize"   Value="13"/>
+        </Style>
 
-            <SolidColorBrush x:Key="Slider.TrackBg.Dark"   Color="#262B39"/>
-            <SolidColorBrush x:Key="Slider.Fill.Dark"      Color="#FF81A1C1"/>
-            <SolidColorBrush x:Key="Slider.Thumb.Dark"     Color="#C7D0DC"/>
+        <Style TargetType="{x:Type ListBoxItem}">
+            <Setter Property="FontFamily" Value="{StaticResource App.FontFamily}"/>
+            <Setter Property="FontSize"   Value="13"/>
+        </Style>
 
-            <!-- share card container -->
-            <Style x:Key="Card.Container" TargetType="Border">
-                <!-- Light -->
-                <Setter Property="Background" Value="#E6F9FAFF"/>
-                <Setter Property="BorderBrush" Value="#E3E6F0"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="CornerRadius" Value="14"/>
-                <Setter Property="SnapsToDevicePixels" Value="True"/>
-                <Setter Property="Effect">
-                    <Setter.Value>
-                        <DropShadowEffect BlurRadius="18" ShadowDepth="3" Opacity="0.28"/>
-                    </Setter.Value>
-                </Setter>
-                <!-- Dark: Window.DataContext.TodoListViewModel.TextColor == White -->
-                <Style.Triggers>
-                    <DataTrigger
-                        Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
-                                          RelativeSource={RelativeSource AncestorType=Window}}"
-                        Value="#FFFFFFFF">
-                        <Setter Property="Background" Value="#D9252A38"/>
-                        <Setter Property="BorderBrush" Value="#3A4156"/>
-                        <Setter Property="Effect">
-                            <Setter.Value>
-                                <DropShadowEffect BlurRadius="26" ShadowDepth="2" Opacity="0.55" Color="#000000"/>
-                            </Setter.Value>
-                        </Setter>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
+        <Style TargetType="{x:Type CheckBox}">
+            <Setter Property="FontFamily" Value="{StaticResource App.FontFamily}"/>
+            <Setter Property="FontSize"   Value="13"/>
+        </Style>
 
-            <!-- ghost -->
-            <Style x:Key="Button.Icon.Ghost" TargetType="Button">
-                <Setter Property="Width" Value="32"/>
-                <Setter Property="Height" Value="32"/>
-                <Setter Property="Padding" Value="0"/>
-                <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="Focusable" Value="False"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="Button">
-                            <Grid>
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Grid>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Opacity" Value="0.95"/>
-                                </Trigger>
-                                <Trigger Property="IsPressed" Value="True">
-                                    <Setter Property="Opacity" Value="0.85"/>
-                                </Trigger>
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter Property="Opacity" Value="0.6"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
+        <Style TargetType="{x:Type ListView}">
+            <Setter Property="FontFamily" Value="{StaticResource App.FontFamily}"/>
+            <Setter Property="FontSize"   Value="13"/>
+        </Style>
+        <Style TargetType="{x:Type ListViewItem}">
+            <Setter Property="FontFamily" Value="{StaticResource App.FontFamily}"/>
+            <Setter Property="FontSize"   Value="13"/>
+        </Style>
 
-            <!-- ===== Music icon theme styles (global) ===== -->
-            <Style x:Key="Img.Prev.Theme" TargetType="Image">
-                <Setter Property="Source" Value="/Resources/music_widget/prev_light_80.png"/>
-                <Style.Triggers>
-                    <DataTrigger
-                          Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
-                                            RelativeSource={RelativeSource AncestorType=Window}}"
-                          Value="#FFFFFFFF">
-                        <Setter Property="Source" Value="/Resources/music_widget/prev_dark_80.png"/>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
+        <!-- Dark theme brushes -->
+        <SolidColorBrush x:Key="AccentBrush" Color="#81A1C1"/>
+        <SolidColorBrush x:Key="Dark.Text" Color="#ECECEC"/>
+        <SolidColorBrush x:Key="Dark.InputBg" Color="#242938"/>
+        <SolidColorBrush x:Key="Dark.InputBg.Hover" Color="#2A2F3E"/>
+        <SolidColorBrush x:Key="Dark.InputBorder" Color="#3A4156"/>
+        <SolidColorBrush x:Key="Dark.ButtonBg" Color="#30354A"/>
+        <SolidColorBrush x:Key="Dark.ButtonBg.Hover" Color="#373C53"/>
+        <SolidColorBrush x:Key="Dark.ButtonBg.Pressed" Color="#2B3044"/>
+        <SolidColorBrush x:Key="Dark.ButtonBorder" Color="#3C415A"/>
 
-            <Style x:Key="Img.Next.Theme" TargetType="Image">
-                <Setter Property="Source" Value="/Resources/music_widget/next_light_80.png"/>
-                <Style.Triggers>
-                    <DataTrigger
-                          Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
-                                            RelativeSource={RelativeSource AncestorType=Window}}"
-                          Value="#FFFFFFFF">
-                        <Setter Property="Source" Value="/Resources/music_widget/next_dark_80.png"/>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
+        <SolidColorBrush x:Key="Slider.TrackBg.Light" Color="#E3E6F0"/>
+        <SolidColorBrush x:Key="Slider.Fill.Light"     Color="#FF81A1C1"/>
+        <SolidColorBrush x:Key="Slider.Thumb.Light"    Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="Slider.TrackBg.Dark"   Color="#262B39"/>
+        <SolidColorBrush x:Key="Slider.Fill.Dark"      Color="#FF81A1C1"/>
+        <SolidColorBrush x:Key="Slider.Thumb.Dark"     Color="#C7D0DC"/>
 
-            <Style x:Key="Img.Play.Theme" TargetType="Image">
-                <Setter Property="Source" Value="/Resources/music_widget/play_light_80.png"/>
-                <Style.Triggers>
-                    <DataTrigger
-                          Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
-                                            RelativeSource={RelativeSource AncestorType=Window}}"
-                          Value="#FFFFFFFF">
-                        <Setter Property="Source" Value="/Resources/music_widget/play_dark_80.png"/>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
+        <!-- share card container -->
+        <Style x:Key="Card.Container" TargetType="Border">
+            <Setter Property="Background" Value="#E6F9FAFF"/>
+            <Setter Property="BorderBrush" Value="#E3E6F0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="18" ShadowDepth="3" Opacity="0.28"/>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger
+          Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
+                            RelativeSource={RelativeSource AncestorType=Window}}"
+          Value="#FFFFFFFF">
+                    <Setter Property="Background" Value="#D9252A38"/>
+                    <Setter Property="BorderBrush" Value="#3A4156"/>
+                    <Setter Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect BlurRadius="26" ShadowDepth="2" Opacity="0.55" Color="#000000"/>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
 
-            <Style x:Key="Img.Pause.Theme" TargetType="Image">
-                <Setter Property="Source" Value="/Resources/music_widget/pause_light_80.png"/>
-                <Style.Triggers>
-                    <DataTrigger
-                          Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
-                                            RelativeSource={RelativeSource AncestorType=Window}}"
-                          Value="#FFFFFFFF">
-                        <Setter Property="Source" Value="/Resources/music_widget/pause_dark_80.png"/>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
+        <!-- ghost  -->
+        <Style x:Key="Button.Icon.Ghost" TargetType="Button"
+           BasedOn="{StaticResource App.ControlBase}">
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.95"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Opacity" Value="0.85"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-            <!-- share input textbox -->
-            <Style x:Key="Input.TextBox.Rounded" TargetType="TextBox">
-                <Setter Property="Height" Value="28"/>
-                <Setter Property="Padding" Value="10,6"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="Foreground" Value="Black"/>
-                <Setter Property="Background" Value="#F9FAFF"/>
-                <Setter Property="BorderBrush" Value="#E3E6F0"/>
-                <Setter Property="CaretBrush" Value="Black"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <!-- Light template -->
-                        <ControlTemplate TargetType="TextBox">
-                            <Border x:Name="bd" CornerRadius="8"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}">
-                                <ScrollViewer x:Name="PART_ContentHost" Margin="0"/>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <!-- Light hover -->
-                                    <Setter TargetName="bd" Property="Background" Value="#FFFDFEFF"/>
-                                </Trigger>
-                                <Trigger Property="IsKeyboardFocused" Value="True">
-                                    <Setter TargetName="bd" Property="BorderBrush" Value="#FFFD9B2E"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
+        <!-- Music icon theme styles -->
+        <Style x:Key="Img.Prev.Theme" TargetType="Image">
+            <Setter Property="Source" Value="/Resources/music_widget/prev_light_80.png"/>
+            <Style.Triggers>
+                <DataTrigger
+          Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
+                            RelativeSource={RelativeSource AncestorType=Window}}"
+          Value="#FFFFFFFF">
+                    <Setter Property="Source" Value="/Resources/music_widget/prev_dark_80.png"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="Img.Next.Theme" TargetType="Image">
+            <Setter Property="Source" Value="/Resources/music_widget/next_light_80.png"/>
+            <Style.Triggers>
+                <DataTrigger
+          Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
+                            RelativeSource={RelativeSource AncestorType=Window}}"
+          Value="#FFFFFFFF">
+                    <Setter Property="Source" Value="/Resources/music_widget/next_dark_80.png"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="Img.Play.Theme" TargetType="Image">
+            <Setter Property="Source" Value="/Resources/music_widget/play_light_80.png"/>
+            <Style.Triggers>
+                <DataTrigger
+          Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
+                            RelativeSource={RelativeSource AncestorType=Window}}"
+          Value="#FFFFFFFF">
+                    <Setter Property="Source" Value="/Resources/music_widget/play_dark_80.png"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="Img.Pause.Theme" TargetType="Image">
+            <Setter Property="Source" Value="/Resources/music_widget/pause_light_80.png"/>
+            <Style.Triggers>
+                <DataTrigger
+          Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
+                            RelativeSource={RelativeSource AncestorType=Window}}"
+          Value="#FFFFFFFF">
+                    <Setter Property="Source" Value="/Resources/music_widget/pause_dark_80.png"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
 
-                <!-- Dark: Window.DataContext.TodoListViewModel.TextColor == White -->
-                <Style.Triggers>
-                    <DataTrigger
-                        Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
-                                          RelativeSource={RelativeSource AncestorType=Window}}"
-                        Value="#FFFFFFFF">
-                        <Setter Property="Foreground" Value="{StaticResource Dark.Text}"/>
-                        <Setter Property="Background" Value="{StaticResource Dark.InputBg}"/>
-                        <Setter Property="BorderBrush" Value="{StaticResource Dark.InputBorder}"/>
-                        <Setter Property="CaretBrush" Value="{StaticResource Dark.Text}"/>
+        <!-- MusicPlayer title/time -->
+        <Style x:Key="Text.MusicPlayer.Title" TargetType="TextBlock"
+           BasedOn="{StaticResource App.TextBlockBase}">
+            <Setter Property="FontWeight"  Value="SemiBold"/>
+            <Setter Property="FontSize"    Value="14"/>
+            <Setter Property="Foreground"  Value="#2E3440"/>
+            <Style.Triggers>
+                <DataTrigger
+          Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
+                            RelativeSource={RelativeSource AncestorType=Window}}"
+          Value="#FFFFFFFF">
+                    <Setter Property="Foreground" Value="{StaticResource Dark.Text}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
 
-                        <!--dark -->
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="TextBox">
-                                    <Border x:Name="bd" CornerRadius="8"
-                                        Background="{TemplateBinding Background}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}">
-                                        <ScrollViewer x:Name="PART_ContentHost" Margin="0"/>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="bd" Property="Background" Value="{StaticResource Dark.InputBg.Hover}"/>
-                                        </Trigger>
-                                        <Trigger Property="IsKeyboardFocused" Value="True">
-                                            <Setter TargetName="bd" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
+        <Style x:Key="Text.MusicPlayer.Time" TargetType="TextBlock"
+           BasedOn="{StaticResource App.TextBlockBase}">
+            <Setter Property="FontSize"   Value="11"/>
+            <Setter Property="Opacity"    Value="0.85"/>
+            <Setter Property="Foreground" Value="#4C566A"/>
+            <Style.Triggers>
+                <DataTrigger
+          Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
+                            RelativeSource={RelativeSource AncestorType=Window}}"
+          Value="#FFFFFFFF">
+                    <Setter Property="Foreground" Value="#C7D0DC"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
 
-            <!-- share basic round Btn -->
-            <Style x:Key="Button.Primary.Rounded" TargetType="Button">
-                <Setter Property="MinWidth" Value="56"/>
-                <Setter Property="Height" Value="28"/>
-                <Setter Property="Padding" Value="12,2"/>
-                <Setter Property="FontWeight" Value="SemiBold"/>
-                <Setter Property="Foreground" Value="#333333"/>
-                <Setter Property="Background" Value="#E6E9EF"/>
-                <Setter Property="BorderBrush" Value="#C8CEDB"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="Cursor" Value="Hand"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <!-- Light template -->
-                        <ControlTemplate TargetType="Button">
-                            <Border x:Name="b" CornerRadius="8"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}">
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="b" Property="Background" Value="#F0F2F6"/>
-                                </Trigger>
-                                <Trigger Property="IsPressed" Value="True">
-                                    <Setter TargetName="b" Property="Background" Value="#D9DDE7"/>
-                                </Trigger>
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter TargetName="b" Property="Opacity" Value="0.6"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
+        <!-- TextBox -->
+        <Style x:Key="Input.TextBox.Rounded" TargetType="TextBox"
+           BasedOn="{StaticResource App.ControlBase}">
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Background" Value="#F9FAFF"/>
+            <Setter Property="BorderBrush" Value="#E3E6F0"/>
+            <Setter Property="CaretBrush" Value="Black"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="bd" CornerRadius="8"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="0"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#FFFDFEFF"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="bd" Property="BorderBrush" Value="#FFFD9B2E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
 
-                <!-- Dark -->
-                <Style.Triggers>
-                    <DataTrigger
-                        Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
-                                          RelativeSource={RelativeSource AncestorType=Window}}"
-                        Value="#FFFFFFFF">
-                        <Setter Property="Foreground" Value="{StaticResource Dark.Text}"/>
-                        <Setter Property="Background" Value="{StaticResource Dark.ButtonBg}"/>
-                        <Setter Property="BorderBrush" Value="{StaticResource Dark.ButtonBorder}"/>
+            <Style.Triggers>
+                <DataTrigger
+          Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
+                            RelativeSource={RelativeSource AncestorType=Window}}"
+          Value="#FFFFFFFF">
+                    <Setter Property="Foreground" Value="{StaticResource Dark.Text}"/>
+                    <Setter Property="Background" Value="{StaticResource Dark.InputBg}"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource Dark.InputBorder}"/>
+                    <Setter Property="CaretBrush" Value="{StaticResource Dark.Text}"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="TextBox">
+                                <Border x:Name="bd" CornerRadius="8"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ScrollViewer x:Name="PART_ContentHost" Margin="0"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="bd" Property="Background" Value="{StaticResource Dark.InputBg.Hover}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsKeyboardFocused" Value="True">
+                                        <Setter TargetName="bd" Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
 
-                        <!-- dark -->
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="Button">
-                                    <Border x:Name="b" CornerRadius="8"
-                                        Background="{TemplateBinding Background}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}">
-                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="b" Property="Background" Value="{StaticResource Dark.ButtonBg.Hover}"/>
-                                        </Trigger>
-                                        <Trigger Property="IsPressed" Value="True">
-                                            <Setter TargetName="b" Property="Background" Value="{StaticResource Dark.ButtonBg.Pressed}"/>
-                                        </Trigger>
-                                        <Trigger Property="IsEnabled" Value="False">
-                                            <Setter TargetName="b" Property="Opacity" Value="0.6"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
+        <!-- Btn -->
+        <Style x:Key="Button.Primary.Rounded" TargetType="Button"
+           BasedOn="{StaticResource App.ControlBase}">
+            <Setter Property="MinWidth" Value="56"/>
+            <Setter Property="Height" Value="28"/>
+            <Setter Property="Padding" Value="12,2"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="Background" Value="#E6E9EF"/>
+            <Setter Property="BorderBrush" Value="#C8CEDB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="b" CornerRadius="8"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="b" Property="Background" Value="#F0F2F6"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="b" Property="Background" Value="#D9DDE7"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="b" Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
 
-            <!-- togglebtn -->
-            <Style x:Key="ToggleButtonStyle" TargetType="Button" BasedOn="{StaticResource Button.Primary.Rounded}">
-                <Setter Property="Width" Value="56"/>
-                <Setter Property="Height" Value="56"/>
-                <Setter Property="Padding" Value="0"/>
-                <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="Background" Value="#33FFFFFF"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="Button">
-                            <Border x:Name="b" CornerRadius="28"
-                                  Background="{TemplateBinding Background}">
-                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="b" Property="Background" Value="#55FFFFFF"/>
-                                </Trigger>
-                                <Trigger Property="IsPressed" Value="True">
-                                    <Setter TargetName="b" Property="Background" Value="#77FFFFFF"/>
-                                </Trigger>
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter TargetName="b" Property="Opacity" Value="0.6"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                <!-- Dark -->
-                <Style.Triggers>
-                    <DataTrigger
-                        Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
-                                          RelativeSource={RelativeSource AncestorType=Window}}"
-                                Value="#FFFFFFFF">
-                        <Setter Property="Background" Value="#331A1E2B"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="Button">
-                                    <Border x:Name="b" CornerRadius="28"
-                                          Background="{TemplateBinding Background}">
-                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="b" Property="Background" Value="#4D1A1E2B"/>
-                                        </Trigger>
-                                        <Trigger Property="IsPressed" Value="True">
-                                            <Setter TargetName="b" Property="Background" Value="#661A1E2B"/>
-                                        </Trigger>
-                                        <Trigger Property="IsEnabled" Value="False">
-                                            <Setter TargetName="b" Property="Opacity" Value="0.6"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
+            <Style.Triggers>
+                <DataTrigger
+          Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
+                            RelativeSource={RelativeSource AncestorType=Window}}"
+          Value="#FFFFFFFF">
+                    <Setter Property="Foreground" Value="{StaticResource Dark.Text}"/>
+                    <Setter Property="Background" Value="{StaticResource Dark.ButtonBg}"/>
+                    <Setter Property="BorderBrush" Value="{StaticResource Dark.ButtonBorder}"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="b" CornerRadius="8"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="b" Property="Background" Value="{StaticResource Dark.ButtonBg.Hover}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="b" Property="Background" Value="{StaticResource Dark.ButtonBg.Pressed}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter TargetName="b" Property="Opacity" Value="0.6"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
 
-            <!-- mini_slider (fix: prevent clipping) -->
-            <Style x:Key="Slider.Mini" TargetType="Slider">
-                <Setter Property="Height" Value="24"/>
-                <Setter Property="MinHeight" Value="22"/>
-                <Setter Property="Margin" Value="0,6,0,6"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="Slider">
-                            <Grid Margin="0" MinHeight="{TemplateBinding MinHeight}">
-                                <Border x:Name="TrackBase"
-                                      Height="4" VerticalAlignment="Center"
-                                      CornerRadius="2"
-                                      Background="{StaticResource Slider.TrackBg.Light}"/>
+        <!-- Toggle -->
+        <Style x:Key="ToggleButtonStyle" TargetType="Button"
+           BasedOn="{StaticResource Button.Primary.Rounded}">
+            <Setter Property="Width" Value="56"/>
+            <Setter Property="Height" Value="56"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="#33FFFFFF"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="b" CornerRadius="28" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="b" Property="Background" Value="#55FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="b" Property="Background" Value="#77FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="b" Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger
+          Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
+                            RelativeSource={RelativeSource AncestorType=Window}}"
+          Value="#FFFFFFFF">
+                    <Setter Property="Background" Value="#331A1E2B"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="b" CornerRadius="28" Background="{TemplateBinding Background}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="b" Property="Background" Value="#4D1A1E2B"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="b" Property="Background" Value="#661A1E2B"/>
+                                    </Trigger>
+                                    <Trigger Property="IsEnabled" Value="False">
+                                        <Setter TargetName="b" Property="Opacity" Value="0.6"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
 
-                                <Track x:Name="PART_Track"
-                                     VerticalAlignment="Center"
-                                     Focusable="False">
+        <!-- Slider-->
+        <Style x:Key="Slider.Mini" TargetType="Slider"
+           BasedOn="{StaticResource App.ControlBase}">
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="MinHeight" Value="22"/>
+            <Setter Property="Margin" Value="0,6,0,6"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid Margin="0" MinHeight="{TemplateBinding MinHeight}">
+                            <Border x:Name="TrackBase" Height="4" VerticalAlignment="Center"
+                      CornerRadius="2" Background="{StaticResource Slider.TrackBg.Light}"/>
+                            <Track x:Name="PART_Track" VerticalAlignment="Center" Focusable="False">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton x:Name="LeftTrack"
+                                Command="Slider.DecreaseLarge"
+                                Background="{StaticResource Slider.Fill.Light}"
+                                BorderThickness="0">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="2"/>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton x:Name="RightTrack"
+                                Command="Slider.IncreaseLarge"
+                                Background="{StaticResource Slider.TrackBg.Light}"
+                                BorderThickness="0">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="2"/>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.IncreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb x:Name="Thumb" Width="10" Height="10"
+                         Background="{StaticResource Slider.Thumb.Light}"
+                         BorderBrush="#C8CEDB" BorderThickness="1">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Ellipse Fill="{TemplateBinding Background}"
+                                 Stroke="{TemplateBinding BorderBrush}"
+                                 StrokeThickness="{TemplateBinding BorderThickness}"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger SourceName="Thumb" Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Thumb" Property="Width"  Value="12"/>
+                                <Setter TargetName="Thumb" Property="Height" Value="12"/>
+                            </Trigger>
+                            <DataTrigger
+                Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
+                                  RelativeSource={RelativeSource AncestorType=Window}}"
+                Value="#FFFFFFFF">
+                                <Setter TargetName="TrackBase"  Property="Background" Value="{StaticResource Slider.TrackBg.Dark}"/>
+                                <Setter TargetName="LeftTrack"  Property="Background" Value="{StaticResource Slider.Fill.Dark}"/>
+                                <Setter TargetName="RightTrack" Property="Background" Value="{StaticResource Slider.TrackBg.Dark}"/>
+                                <Setter TargetName="Thumb"      Property="Background" Value="{StaticResource Slider.Thumb.Dark}"/>
+                                <Setter TargetName="Thumb"      Property="BorderBrush" Value="{StaticResource Dark.ButtonBorder}"/>
+                            </DataTrigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="TrackBase" Property="Opacity" Value="0.5"/>
+                                <Setter TargetName="LeftTrack" Property="Opacity"  Value="0.5"/>
+                                <Setter TargetName="RightTrack" Property="Opacity" Value="0.5"/>
+                                <Setter TargetName="Thumb"     Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-                                    <Track.DecreaseRepeatButton>
-                                        <RepeatButton x:Name="LeftTrack"
-                                            Command="Slider.DecreaseLarge"
-                                            Background="{StaticResource Slider.Fill.Light}"
-                                            BorderThickness="0">
-                                            <RepeatButton.Template>
-                                                <ControlTemplate TargetType="RepeatButton">
-                                                    <Border Background="{TemplateBinding Background}" CornerRadius="2"/>
-                                                </ControlTemplate>
-                                            </RepeatButton.Template>
-                                        </RepeatButton>
-                                    </Track.DecreaseRepeatButton>
-
-                                    <Track.IncreaseRepeatButton>
-                                        <RepeatButton x:Name="RightTrack"
-                                            Command="Slider.IncreaseLarge"
-                                            Background="{StaticResource Slider.TrackBg.Light}"
-                                            BorderThickness="0">
-                                            <RepeatButton.Template>
-                                                <ControlTemplate TargetType="RepeatButton">
-                                                    <Border Background="{TemplateBinding Background}" CornerRadius="2"/>
-                                                </ControlTemplate>
-                                            </RepeatButton.Template>
-                                        </RepeatButton>
-                                    </Track.IncreaseRepeatButton>
-
-                                    <Track.Thumb>
-                                        <Thumb x:Name="Thumb" Width="10" Height="10"
-                                             Background="{StaticResource Slider.Thumb.Light}"
-                                             BorderBrush="#C8CEDB" BorderThickness="1">
-                                            <Thumb.Template>
-                                                <ControlTemplate TargetType="Thumb">
-                                                    <Ellipse Fill="{TemplateBinding Background}"
-                                                         Stroke="{TemplateBinding BorderBrush}"
-                                                         StrokeThickness="{TemplateBinding BorderThickness}"/>
-                                                </ControlTemplate>
-                                            </Thumb.Template>
-                                        </Thumb>
-                                    </Track.Thumb>
-                                </Track>
-                            </Grid>
-
-                            <ControlTemplate.Triggers>
-                                <Trigger SourceName="Thumb" Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="Thumb" Property="Width" Value="12"/>
-                                    <Setter TargetName="Thumb" Property="Height" Value="12"/>
-                                </Trigger>
-
-                                <DataTrigger
-                                    Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
-                                                      RelativeSource={RelativeSource AncestorType=Window}}"
-                                    Value="#FFFFFFFF">
-                                    <Setter TargetName="TrackBase"  Property="Background" Value="{StaticResource Slider.TrackBg.Dark}"/>
-                                    <Setter TargetName="LeftTrack"  Property="Background" Value="{StaticResource Slider.Fill.Dark}"/>
-                                    <Setter TargetName="RightTrack" Property="Background" Value="{StaticResource Slider.TrackBg.Dark}"/>
-                                    <Setter TargetName="Thumb"      Property="Background" Value="{StaticResource Slider.Thumb.Dark}"/>
-                                    <Setter TargetName="Thumb"      Property="BorderBrush" Value="{StaticResource Dark.ButtonBorder}"/>
-                                </DataTrigger>
-
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter TargetName="TrackBase" Property="Opacity" Value="0.5"/>
-                                    <Setter TargetName="LeftTrack" Property="Opacity"  Value="0.5"/>
-                                    <Setter TargetName="RightTrack" Property="Opacity" Value="0.5"/>
-                                    <Setter TargetName="Thumb" Property="Opacity" Value="0.5"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
-        </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -240,9 +240,11 @@
                 <Border Grid.Row="0" Background="Transparent"
                     b:DragInCanvasBehavior.IsDragGrip="True">
                     <TextBlock Text="TO-DO"
-             FontSize="18" FontWeight="Bold"
-             Margin="4,2,4,10"
-             Foreground="{Binding TextColor}"/>
+                                FontSize="18" FontWeight="Bold"
+                                Margin="4,2,4,10"
+                                Foreground="{Binding TextColor}"
+                               HorizontalAlignment="Center"
+                               />
                 </Border>
 
 
