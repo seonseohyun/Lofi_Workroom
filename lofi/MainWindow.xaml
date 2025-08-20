@@ -33,6 +33,16 @@
                 b:DragInCanvasBehavior.ClampToParent="True"
                 b:DragInCanvasBehavior.IgnoreInteractiveChildren="True"
                 DataContext="{Binding MusicPlayerViewModel}" Loaded="MusicPlayer_Loaded"/>
+
+            <views:PomodoroTimer
+                Canvas.Left="550" Canvas.Top="165"
+                Width="240" Height="300"
+                b:DragInCanvasBehavior.IsEnabled="True"
+                b:DragInCanvasBehavior.BringToFront="True"
+                b:DragInCanvasBehavior.ClampToParent="True"
+                b:DragInCanvasBehavior.IgnoreInteractiveChildren="True"
+                DataContext="{Binding PomodoroViewModel}"/>
+            
         </Canvas>
 
         <Button Command="{Binding ToggleThemeCommand}"
@@ -42,10 +52,9 @@
                 Style="{StaticResource Button.Icon.Ghost}"
                 Width="50" Height="50">
             <Image Source="{Binding ToggleButtonImageSource}"
-                    Width="50" Height="50"
-                    RenderOptions.BitmapScalingMode="NearestNeighbor"
-                    SnapsToDevicePixels="True"/>
+                   Width="50" Height="50"
+                   RenderOptions.BitmapScalingMode="NearestNeighbor"
+                   SnapsToDevicePixels="True"/>
         </Button>
-
     </Grid>
 </Window>

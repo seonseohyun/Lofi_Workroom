@@ -297,10 +297,10 @@
                         Margin="0,0,8,0"
                         Style="{StaticResource Input.TextBox.Rounded}"
                         Text="{Binding NewTodoText, UpdateSourceTrigger=PropertyChanged}">
-                                    <TextBox.InputBindings>
-                                        <KeyBinding Key="Enter" Command="{Binding AddTodoCommand}"/>
-                                    </TextBox.InputBindings>
-                                </TextBox>
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding AddTodoCommand}"/>
+                        </TextBox.InputBindings>
+                    </TextBox>
 
                     <Button Grid.Column="1"
                         Content="추가"

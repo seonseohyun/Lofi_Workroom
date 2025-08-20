@@ -5,40 +5,72 @@
              b:DragInCanvasBehavior.IsEnabled="True"
              b:DragInCanvasBehavior.BringToFront="True"
              b:DragInCanvasBehavior.ClampToParent="True"
-             Width="520" Height="220"
-             MinWidth="520" MaxWidth="520"
-             MinHeight="220" MaxHeight="220">
+             Width="260" MinWidth="260">
 
-    <!-- 루트 Grid -->
+    <!-- Height 지정 X → 콘텐츠에 맞춰 자동, 잘림 방지 -->
     <Grid x:Name="Root" Background="Transparent">
         <Grid.RowDefinitions>
-            <RowDefinition Height="24"/>
+            <RowDefinition Height="30"/>
+            <!-- 헤더 살짝 키움 -->
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- 헤더 = 드래그 시작 영역(Grip) -->
-        <Border Grid.Row="0"
-                Background="#01000000"
-                Cursor="SizeAll"
-                b:DragInCanvasBehavior.IsDragGrip="True"
-                Panel.ZIndex="5"/>
-
-        <!-- 카드 배경은 전체 덮기 -->
+        <!-- 카드 배경 -->
         <Border Grid.RowSpan="2"
                 Style="{StaticResource Card.Container}"
                 IsHitTestVisible="False"
                 Panel.ZIndex="0"/>
 
-        <!-- 본문 레이아웃 -->
-        <Grid Grid.Row="1" Margin="16" Panel.ZIndex="10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="140"/>
-                <ColumnDefinition Width="16"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+        <!-- 헤더(드래그 그립 + 중앙 타이틀) -->
+        <Grid Grid.Row="0"
+              Background="#10000000"
+              Cursor="SizeAll"
+              b:DragInCanvasBehavior.IsDragGrip="True"
+              Panel.ZIndex="5">
+            <TextBlock Text="Music Player"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center">
+                <TextBlock.Style>
+                    <!-- ★ 전역 폰트 확실히 적용: App.TextBlockBase를 BasedOn -->
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource App.TextBlockBase}">
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Setter Property="FontSize"   Value="13"/>
+                        <Setter Property="Foreground" Value="#2E3440"/>
+                        <!-- 라이트 -->
+                        <Style.Triggers>
+                            <DataTrigger
+                                Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
+                                                  RelativeSource={RelativeSource AncestorType=Window}}"
+                                Value="#FFFFFFFF">
+                                <Setter Property="Foreground" Value="{StaticResource Dark.Text}"/>
+                                <!-- 다크 -->
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
 
-            <!-- (좌) 앨범 커버 -->
-            <Grid Grid.Column="0" Width="140" Height="140">
+        <!-- 본문 -->
+        <Grid Grid.Row="1" Margin="12,10,12,12" Panel.ZIndex="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- 커버 -->
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="Auto"/>
+                <!-- 제목 -->
+                <RowDefinition Height="8"/>
+                <RowDefinition Height="Auto"/>
+                <!-- 슬라이더 -->
+                <RowDefinition Height="6"/>
+                <!-- 시간 -->
+                <RowDefinition Height="10"/>
+                <RowDefinition Height="Auto"/>
+                <!-- 버튼 -->
+            </Grid.RowDefinitions>
+
+            <!-- 커버 (조금 키움) -->
+            <Grid Grid.Row="0" Width="130" Height="130" HorizontalAlignment="Center" Margin="0,10,0,0">
                 <Rectangle RadiusX="12" RadiusY="12" Fill="#112E3440"/>
                 <Rectangle RadiusX="12" RadiusY="12">
                     <Rectangle.Fill>
@@ -57,109 +89,103 @@
                 </Rectangle>
             </Grid>
 
-            <!-- (우측 컨텐츠) -->
-            <Grid Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="Auto"/>
-                    <!-- 제목 -->
-                    <RowDefinition Height="Auto"/>
-                    <!-- 버튼 -->
-                    <RowDefinition Height="Auto"/>
-                    <!-- 바+시간 -->
-                </Grid.RowDefinitions>
+            <!-- 트랙 제목 -->
+            <TextBlock Grid.Row="2"
+                       Style="{StaticResource Text.MusicPlayer.Title}"
+                       Text="{Binding TrackTitle}"
+                       TextTrimming="CharacterEllipsis"
+                       HorizontalAlignment="Center"
+                       FontSize="14"
+                       MaxWidth="186"/>
 
-                <!-- 제목 -->
-                <TextBlock Grid.Row="1" Margin="0,0,0,6"
-                           Style="{StaticResource Text.MusicPlayer.Title}"
-                           Text="{Binding TrackTitle}"
-                           FontSize="16"
-                           TextTrimming="CharacterEllipsis"
-                           HorizontalAlignment="Center"/>
+            <!-- 진행 바 -->
+            <Slider Grid.Row="4"
+                    Style="{StaticResource Slider.Mini}"
+                    Minimum="0"
+                    Maximum="{Binding DurationSeconds}"
+                    Value="{Binding PositionSeconds, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    IsMoveToPointEnabled="True"
+                    Height="22"
+                    PreviewMouseDown="Slider_PreviewMouseDown"
+                    PreviewMouseUp="Slider_PreviewMouseUp"/>
 
-                <!-- 버튼 -->
-                <Grid Grid.Row="2" Margin="53,29,66,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" MinWidth="72"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="Auto" MinWidth="61"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="14"/>
-                        <ColumnDefinition Width="55"/>
-                    </Grid.ColumnDefinitions>
+            <!-- 시간 표시 -->
+            <Grid Grid.Row="6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0"
+                           Style="{StaticResource Text.MusicPlayer.Time}"
+                           Text="{Binding PositionText}"
+                           HorizontalAlignment="Left"/>
+                <TextBlock Grid.Column="1"
+                           Style="{StaticResource Text.MusicPlayer.Time}"
+                           Text="{Binding DurationText}"
+                           HorizontalAlignment="Right"/>
+            </Grid>
 
-                    <Button Grid.Column="0" Style="{StaticResource Button.Icon.Ghost}"
-                            Command="{Binding PrevCommand}" Margin="20,0,20,0">
-                        <Image Width="40" Height="40" Style="{StaticResource Img.Prev.Theme}"/>
-                    </Button>
+            <!-- 컨트롤 버튼 -->
+            <Grid Grid.Row="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="2" Style="{StaticResource Button.Icon.Ghost}"
-                            Command="{Binding PlayPauseCommand}" Margin="14,0,14,0">
-                        <Grid>
-                            <Image Margin="-1,-2,-17,-12">
-                                <Image.Style>
-                                    <Style TargetType="Image" BasedOn="{StaticResource Img.Play.Theme}">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsPlaying}" Value="True">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Image.Style>
-                            </Image>
-                            <Image Width="48" Height="48">
-                                <Image.Style>
-                                    <Style TargetType="Image" BasedOn="{StaticResource Img.Pause.Theme}">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsPlaying}" Value="True">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Image.Style>
-                            </Image>
-                        </Grid>
-                    </Button>
+                <!-- Prev -->
+                <Button Grid.Column="0"
+                        Width="30" Height="30"
+                        HorizontalAlignment="Right"
+                        Style="{StaticResource Button.Icon.Ghost}"
+                        Command="{Binding PrevCommand}">
+                    <Image Width="25" Height="25" Style="{StaticResource Img.Prev.Theme}"/>
+                </Button>
 
-                    <Button Grid.Column="5" Style="{StaticResource Button.Icon.Ghost}"
-                            Command="{Binding NextCommand}" Margin="5,0,18,0">
-                        <Image Width="40" Height="40" Style="{StaticResource Img.Next.Theme}"/>
-                    </Button>
-                </Grid>
-
-                <!-- 슬라이더 + 시간 -->
-                <StackPanel Grid.Row="3" Orientation="Vertical" Margin="0,8,0,0">
-                    <!-- ★ 중요: 슬라이더 바인딩 추가 -->
-                    <Slider Style="{StaticResource Slider.Mini}"
-                            Height="23"
-                            Minimum="0"
-                            Maximum="{Binding DurationSeconds}"
-                            Value="{Binding PositionSeconds}"
-                            PreviewMouseDown="Slider_PreviewMouseDown"
-                            PreviewMouseUp="Slider_PreviewMouseUp"/>
-
-                    <Grid Margin="0,4,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" 
-                                   Style="{StaticResource Text.MusicPlayer.Time}"
-                                   Text="{Binding PositionText}"
-                                   HorizontalAlignment="Left"
-                                   FontSize="11"
-                                   Opacity="0.7"/>
-
-                        <TextBlock Grid.Column="1" 
-                                   Style="{StaticResource Text.MusicPlayer.Time}"
-                                   Text="{Binding DurationText}"
-                                   HorizontalAlignment="Right"
-                                   FontSize="11"
-                                   Opacity="0.7"/>
+                <!-- Play/Pause -->
+                <Button Grid.Column="1"
+                        Width="36" Height="36"
+                        Margin="10,0"
+                        Style="{StaticResource Button.Icon.Ghost}"
+                        Command="{Binding PlayPauseCommand}">
+                    <Grid>
+                        <!-- Play -->
+                        <Image Width="35" Height="35">
+                            <Image.Style>
+                                <Style TargetType="Image" BasedOn="{StaticResource Img.Play.Theme}">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsPlaying}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                        <!-- Pause -->
+                        <Image Width="24" Height="24">
+                            <Image.Style>
+                                <Style TargetType="Image" BasedOn="{StaticResource Img.Pause.Theme}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsPlaying}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
                     </Grid>
-                </StackPanel>
+                </Button>
+
+                <!-- Next -->
+                <Button Grid.Column="2"
+                        Width="30" Height="30"
+                        HorizontalAlignment="Left"
+                        Style="{StaticResource Button.Icon.Ghost}"
+                        Command="{Binding NextCommand}">
+                    <Image Width="25" Height="25" Style="{StaticResource Img.Next.Theme}"/>
+                </Button>
             </Grid>
         </Grid>
     </Grid>
