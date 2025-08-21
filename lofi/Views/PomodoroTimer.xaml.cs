@@ -1,4 +1,5 @@
 ﻿// lofi.Views/PomodoroTimer.xaml.cs
+using lofi.ViewModels;
 using System.Windows.Controls;
 
 namespace lofi.Views
@@ -8,6 +9,7 @@ namespace lofi.Views
         public PomodoroTimer()
         {
             InitializeComponent();
+            DataContext ??= new MainViewModel();  
         }
     }
 }

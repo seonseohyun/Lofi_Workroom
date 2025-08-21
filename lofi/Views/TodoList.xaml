@@ -197,7 +197,7 @@
     <Grid>
         <Border x:Name="Card"
                 CornerRadius="14"
-                Padding="14"
+                Padding="0"
                 SnapsToDevicePixels="True">
             <!-- 카드 스타일: 라이트/다크에 따라 배경/테두리/그림자 전환 -->
             <Border.Style>
@@ -231,20 +231,41 @@
             <!-- 컨텐츠 -->
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="28"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <!-- 헤더 -->
-                <Border Grid.Row="0" Background="Transparent"
-                    b:DragInCanvasBehavior.IsDragGrip="True">
-                    <TextBlock Text="TO-DO"
-                                FontSize="18" FontWeight="Bold"
-                                Margin="4,2,4,10"
-                                Foreground="{Binding TextColor}"
-                               HorizontalAlignment="Center"
-                               />
+                <Border  Grid.Row="0"
+                      Background="#10000000"
+                      CornerRadius="12,12,0,0"
+
+                      Cursor="SizeAll"
+                      b:DragInCanvasBehavior.IsDragGrip="True"
+                      Panel.ZIndex="5">
+                    <TextBlock Text="To - do"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Center">
+                        <TextBlock.Style>
+                            <!-- ★ 전역 폰트 확실히 적용 -->
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource App.TextBlockBase}">
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                <Setter Property="FontSize"   Value="15"/>
+                                <Setter Property="Foreground" Value="#2E3440"/>
+                                <!-- Light -->
+                                <Style.Triggers>
+                                    <!-- Dark: Music과 동일한 트리거 사용 -->
+                                    <DataTrigger
+                                                Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
+                                                                  RelativeSource={RelativeSource AncestorType=Window}}"
+                                                Value="#FFFFFFFF">
+                                        <Setter Property="Foreground" Value="{StaticResource Dark.Text}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
                 </Border>
 
 

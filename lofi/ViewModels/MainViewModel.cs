@@ -23,7 +23,8 @@ namespace lofi.ViewModels
         [ObservableProperty] private ImageSource _currentBackgroundImageSource;
         [ObservableProperty] private ImageSource _toggleButtonImageSource;
         [ObservableProperty] private TodoListViewModel _todoListViewModel = new();
-
+        [ObservableProperty] private MusicPlayerViewModel _musicPlayerViewModel = new();   // 이미 쓰고 있으면 유지
+        [ObservableProperty] private PomodoroViewModel _pomodoroViewModel = new();    
         private ThemeMode _theme = ThemeMode.Light;
 
         public MainViewModel()

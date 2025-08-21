@@ -39,7 +39,6 @@ namespace lofi.ViewModels
 
         // === 런타임 상태 ===
         [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(PlayPauseIcon))]
         private bool isRunning;
 
         [ObservableProperty]
@@ -66,7 +65,6 @@ namespace lofi.ViewModels
         public string TimeText => TimeSpan.FromSeconds(Math.Max(0, Remaining)).ToString(@"mm\:ss");
         public string CurrentLabel => isWork ? "Focus" : (IsLongBreak ? "Long Break" : "Break");
         public string RoundLabel => isWork ? $"Round {CurrentRound}/{RoundsPerLongBreak}" : "";
-        public string PlayPauseIcon => IsRunning ? "⏸" : "▶";
         public int SessionTotal => isWork ? WorkSeconds : (IsLongBreak ? LongBreakSeconds : ShortBreakSeconds);
         public bool IsLongBreak => !isWork && CurrentRound == RoundsPerLongBreak;
 

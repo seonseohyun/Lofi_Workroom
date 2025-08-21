@@ -1,5 +1,4 @@
-﻿// Converters/ProgressToRingGeometryConverter.cs
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -7,66 +6,37 @@ using System.Windows.Media;
 
 namespace lofi.Converters
 {
-    /// <summary>
-    /// MultiBinding 입력:
-    /// [0] progress: 0~1(double)
-    /// [1] diameter: 링 직경(double) - 보통 Ellipse.Width 바인딩
-    /// [2] thickness: 링 두께(double) - VM에서 제공
-    /// 출력: 진행 아크 PathGeometry
-    /// </summary>
-    public sealed class ProgressToRingGeometryConverter : IMultiValueConverter
+    // values: [0]=progress(0..1), [1]=width, [2]=height, [3]=strokeThickness
+    public class ProgressToDashArrayConverter : IMultiValueConverter
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object[] v, Type targetType, object parameter, CultureInfo culture)
         {
-            double progress = values.Length > 0 && values[0] is double p ? Math.Clamp(p, 0.0, 1.0) : 0.0;
-            double diameter = values.Length > 1 && values[1] is double d ? d : 180.0;
-            double thickness = values.Length > 2 && values[2] is double t ? Math.Max(1.0, t) : 10.0;
+            if (v == null || v.Length < 4) return new DoubleCollection { 0, 1 };
+            if (Unset(v[0]) || Unset(v[1]) || Unset(v[2]) || Unset(v[3])) return new DoubleCollection { 0, 1 };
 
-            // Stroke 중앙선 기준이므로 반경 보정
-            double r = Math.Max(1.0, diameter / 2.0 - thickness / 2.0);
+            double p = Clamp01(System.Convert.ToDouble(v[0]));
+            double w = System.Convert.ToDouble(v[1]);
+            double h = System.Convert.ToDouble(v[2]);
+            double t = Math.Max(0.0001, System.Convert.ToDouble(v[3])); // 0 보호
 
-            // ArcSegment가 0/360에서 특이점 생겨서 살짝 보정
-            double sweep = progress * 360.0;
-            if (sweep >= 360.0) sweep = 359.999;
-            if (sweep <= 0.0) sweep = 0.0001;
+            // 원 둘레(픽셀) = 2πr, r은 정원의 중심선 반지름(min(w,h)/2)
+            double r = Math.Min(w, h) / 2.0;
+            double circumferencePx = 2.0 * Math.PI * r;
 
-            // 12시(-90도)에서 시작
-            const double startDeg = -90.0;
-            double endDeg = startDeg + sweep;
+            // ★ DashArray는 '두께 배수' 단위 → 픽셀 길이를 두께로 나눠 환산
+            double unitsTotal = circumferencePx / t;
+            double dash = unitsTotal * p;
+            double gap = Math.Max(0.0, unitsTotal - dash);
 
-            Point center = new(diameter / 2.0, diameter / 2.0);
-            Point start = PointOnCircle(center, r, startDeg);
-            Point end = PointOnCircle(center, r, endDeg);
-            bool isLargeArc = sweep > 180.0;
-
-            var fig = new PathFigure
-            {
-                StartPoint = start,
-                IsClosed = false,
-                IsFilled = false
-            };
-            fig.Segments.Add(new ArcSegment(
-                point: end,
-                size: new Size(r, r),
-                rotationAngle: 0,
-                isLargeArc: isLargeArc,
-                sweepDirection: SweepDirection.Clockwise,
-                isStroked: true));
-
-            var geo = new PathGeometry();
-            geo.Figures.Add(fig);
-            geo.Freeze();
-            return geo;
+            if (p <= 0.0) return new DoubleCollection { 0, unitsTotal };
+            if (p >= 1.0) return new DoubleCollection { unitsTotal, 0 };
+            return new DoubleCollection { dash, gap };
         }
+
+        static bool Unset(object o) => o == null || o == DependencyProperty.UnsetValue;
+        static double Clamp01(double x) => x < 0 ? 0 : (x > 1 ? 1 : x);
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-            => throw new NotSupportedException();
-
-        private static Point PointOnCircle(Point c, double radius, double degrees)
-        {
-            double rad = degrees * Math.PI / 180.0;
-            return new Point(c.X + radius * Math.Cos(rad),
-                             c.Y + radius * Math.Sin(rad));
-        }
+            => throw new NotImplementedException();
     }
 }

@@ -97,6 +97,9 @@
         <SolidColorBrush x:Key="Pomodoro.ShortBreakBrush" Color="#252E3B"/>
         <SolidColorBrush x:Key="Pomodoro.LongBreakBrush"  Color="#8FBCBB"/>
 
+        <SolidColorBrush x:Key="Brush.HeaderBg"   Color="#12FFFFFF"/>
+        <SolidColorBrush x:Key="Brush.HeaderLine" Color="#22000000"/>
+        
         <!-- Light theme brushes -->
         <SolidColorBrush x:Key="Pomodoro.Timer.Foreground" Color="#2E3440"/>
 
@@ -535,10 +538,9 @@
 
         <!-- ProgressPathStyle -->
         <Style x:Key="Pomodoro.ProgressPathStyle" TargetType="Path">
-            <Setter Property="StrokeThickness" Value="{DynamicResource Pomodoro.RingThickness}"/>
             <Setter Property="Stroke" Value="{DynamicResource Pomodoro.WorkBrush}"/>
             <Setter Property="StrokeStartLineCap" Value="Round"/>
-            <Setter Property="StrokeEndLineCap" Value="Round"/>
+            <Setter Property="StrokeEndLineCap"   Value="Round"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsWork}" Value="False">
                     <Setter Property="Stroke" Value="{DynamicResource Pomodoro.ShortBreakBrush}"/>
@@ -547,6 +549,13 @@
                     <Setter Property="Stroke" Value="{DynamicResource Pomodoro.LongBreakBrush}"/>
                 </DataTrigger>
             </Style.Triggers>
+        </Style>
+
+        <Style x:Key="Widget.HeaderGrip" TargetType="Border">
+            <Setter Property="Background" Value="#01000000"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="CornerRadius" Value="12,12,0,0"/>
+            <Setter Property="Cursor" Value="SizeAll"/>
         </Style>
 
         <!-- Key -->
