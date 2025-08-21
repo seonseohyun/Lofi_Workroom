@@ -315,7 +315,7 @@
                     </Grid.ColumnDefinitions>
 
                     <TextBox Grid.Column="0"
-                        Margin="0,0,8,0"
+                        Margin="5,0,0,10"
                         Style="{StaticResource Input.TextBox.Rounded}"
                         Text="{Binding NewTodoText, UpdateSourceTrigger=PropertyChanged}">
                         <TextBox.InputBindings>
@@ -325,6 +325,7 @@
 
                     <Button Grid.Column="1"
                         Content="추가"
+                        Margin="0,0,0,10"
                         Style="{StaticResource Button.Primary.Rounded}"
                         Command="{Binding AddTodoCommand}"/>
 
