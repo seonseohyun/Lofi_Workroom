@@ -165,29 +165,53 @@ namespace lofi.ViewModels
 
             if (Tracks.Any())
                 CurrentIndex = 0; // 첫 곡 자동 재생
+            OnPropertyChanged(nameof(CurrentIndex));
+            OpenTrack(Tracks[0], autoplay: false); // 첫 곡은 일시정지 상태로 로드
         }
+        private bool _isSwitching;
 
         // === 핵심 메서드 ===
-        private void OpenAndPlay(Track t)
+        private void OpenTrack(Track t, bool autoplay)
         {
+            if (_isSwitching) return;
+            _isSwitching = true;
             try
             {
-                _music.Open(new Uri(t.AudioPackUri, UriKind.RelativeOrAbsolute)); // 변경
-                _music.Play();
-                _timer.Start();
-                IsPlaying = true;
+                _music.Stop();
+                _music.Open(new Uri(t.AudioPackUri, UriKind.RelativeOrAbsolute));
+
                 TrackTitle = t.Title;
                 CoverImage = LoadBitmapOrNull(t.CoverPackUri);
+                PositionSeconds = 0;
+                DurationSeconds = 0;
+                _music.Position = TimeSpan.Zero;
+
+                if (autoplay)
+                {
+                    _music.Play();
+                    if (!_timer.IsEnabled) _timer.Start();
+                    IsPlaying = true;
+                }
+                else
+                {
+                    _music.Pause();   // 곡은 로드하지만 멈춘 상태로 시작
+                    IsPlaying = false;
+                }
             }
-            catch
+            finally
             {
-                IsPlaying = false; // 실패 시 상태 정리
+                _isSwitching = false;
             }
         }
 
+        // 기존 OpenAndPlay는 autoplay=true 버전으로 남겨두세요
+        private void OpenAndPlay(Track t) => OpenTrack(t, true);
         private void PlayPause()
         {
             if (!Tracks.Any()) return;
+
+            if (CurrentIndex < 0) // 아직 아무 곡도 선택 안 됨
+                CurrentIndex = 0; // 여기서만 첫 곡 선택
 
             if (IsPlaying)
             {
@@ -198,6 +222,7 @@ namespace lofi.ViewModels
             {
                 _music.Play();
                 IsPlaying = true;
+                _timer.Start();
             }
         }
 

@@ -17,10 +17,19 @@ namespace lofi.Services
             _player.Volume = 1.0;
         }
 
-        public void Open(Uri source) => _player.Open(source);
+        public void Open(Uri uri)
+        {
+            _player.Stop();   // 현재 재생 중지
+            _player.Close();  // 현재 소스 언로드
+            _player.Open(uri);
+        }
         public void Play() => _player.Play();
         public void Pause() => _player.Pause();
-        public void Stop() => _player.Stop();
+        public void Stop()
+        {
+            _player.Stop();
+            _player.Close(); // 이 줄이 중요: Close로 소스를 해제해야 '겹침'이 사라집니다.
+        }
 
         public bool HasDuration => _player.NaturalDuration.HasTimeSpan;
         public TimeSpan Duration => _player.NaturalDuration.HasTimeSpan
