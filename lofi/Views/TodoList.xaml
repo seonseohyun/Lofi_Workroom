@@ -10,7 +10,10 @@
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance Type={x:Type vm:TodoListViewModel}, IsDesignTimeCreatable=False}"
     Width="240" Height="340">
-
+    
+    <UserControl.DataContext>
+        <vm:TodoListViewModel/>
+    </UserControl.DataContext>
 
     <!-- ============= THEME-AWARE STYLES/RESOURCES ============= -->
     <UserControl.Resources>
@@ -257,8 +260,8 @@
                                 <Style.Triggers>
                                     <!-- Dark: Music과 동일한 트리거 사용 -->
                                     <DataTrigger
-                                                Binding="{Binding DataContext.TodoListViewModel.TextColor.Color,
-                                                                  RelativeSource={RelativeSource AncestorType=Window}}"
+                                                Binding="{Binding DataContext.TextColor.Color,
+                                                                RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 Value="#FFFFFFFF">
                                         <Setter Property="Foreground" Value="{StaticResource Dark.Text}"/>
                                     </DataTrigger>
@@ -282,9 +285,10 @@
                                     </Grid.ColumnDefinitions>
 
                                     <CheckBox Grid.Column="0"
-                                    VerticalAlignment="Center"
-                                    IsChecked="{Binding IsCompleted, Mode=TwoWay}"
-                                    Style="{StaticResource TodoItemCheckBoxStyle}"/>
+                                              VerticalAlignment="Center"
+                                              IsChecked="{Binding IsCompleted, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              Style="{StaticResource TodoItemCheckBoxStyle}"/>
+
 
 
                                     <TextBlock Grid.Column="1"
@@ -339,9 +343,9 @@
         <Border CornerRadius="14" Background="{x:Null}" ClipToBounds="True" SnapsToDevicePixels="True">
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsHitTestVisible="True">
                 <!-- 변 -->
-                <Thumb Style="{StaticResource InvisibleResizeThumb}" Width="6"  HorizontalAlignment="Left"   Cursor="SizeWE"
+                <Thumb Style="{StaticResource InvisibleResizeThumb}" Width="4"  HorizontalAlignment="Left"   Cursor="SizeWE"
            DragDelta="ResizeLeft_OnDragDelta"/>
-                <Thumb Style="{StaticResource InvisibleResizeThumb}" Width="6"  HorizontalAlignment="Right"  Cursor="SizeWE"
+                <Thumb Style="{StaticResource InvisibleResizeThumb}" Width="4"  HorizontalAlignment="Right"  Cursor="SizeWE"
            DragDelta="ResizeRight_OnDragDelta"/>
                 <Thumb Style="{StaticResource InvisibleResizeThumb}" Height="6" VerticalAlignment="Top"      Cursor="SizeNS"
            DragDelta="ResizeTop_OnDragDelta"/>

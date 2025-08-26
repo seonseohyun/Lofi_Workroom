@@ -3,34 +3,31 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows7.0</TargetFramework>
     <UseWPF>true</UseWPF>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyName>lofi</AssemblyName>
-    <RootNamespace>lofi</RootNamespace>
+
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <PublishTrimmed>false</PublishTrimmed> <!-- WPF 안전하게 -->
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
-    <PackageReference Include="TagLibSharp" Version="2.3.0" />
+    <Resource Remove="Resources\**\*.*" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Remove="Resources\Music\**\*.*" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Resources\Music\**\*.*">
+    <Content Include="Resources\**\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>Always</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
 
-  <Target Name="CopyMusicOnPublish" AfterTargets="Publish">
-    <ItemGroup>
-      <_MusicFiles Include="$(ProjectDir)Resources\Music\**\*.*" />
-    </ItemGroup>
-    <Copy SourceFiles="@(_MusicFiles)"
-          DestinationFiles="@(_MusicFiles->'$(PublishDir)Resources\Music\%(RecursiveDir)%(Filename)%(Extension)')" />
-  </Target>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+    <PackageReference Include="TagLibSharp" Version="2.3.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.8" />
+    <PackageReference Include="SQLitePCLRaw.bundle_e_sqlite3" Version="2.*" />
+  </ItemGroup>
 </Project>
