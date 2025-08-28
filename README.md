@@ -1,6 +1,6 @@
 # Lofi_Workroom
  </p>
-  <img src="./image/lofi_wokroom_logo.png.png" alt="logo" width="300" height="200"/>
+  <img src="./image/lofi_wokroom_logo.png" alt="logo" width="300" height="200"/>
 </p>
 
 ##  프로젝트 한눈에 보기
