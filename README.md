@@ -7,9 +7,7 @@
 [![Database](https://img.shields.io/badge/Database-SQLite-07405E?style=flat&logo=sqlite&logoColor=white)](https://www.sqlite.org/index.html)
 
 ---
- </p>
-  <img src="./image/lofi_wokroom_logo.png" alt="logo" width="300" height="200"/>
-</p>
+
 
 ##  프로젝트 한눈에 보기
 C#과 WPF를 5일 만에 집중 학습하며 **AI Vibe Coding**으로 완성한 앱 입니다. 새로운 기술 스택에 대한 도전을 기록합니다.
@@ -18,6 +16,18 @@ C#과 WPF를 5일 만에 집중 학습하며 **AI Vibe Coding**으로 완성한 
 개인 작업을 위한 최적의 **집중 공간**을 제공하며, 로파이 감성을 담은 위젯 시스템을 통해 사용자의 작업 효율을 극대화하는 것을 목표로 합니다.
   
 ---
+
+##  프로젝트 미리보기 (Screenshots)
+ </p>
+  <img src="./image/lofi_wokroom_logo.png" alt="logo" width="300" height="200"/>
+</p>
+  
+  ### 라이트 모드 (Light Mode)
+  <img src="image/lightmode.png" alt="Light Mode Screenshot" width="80%" style="margin-bottom: 20px; border: 1px solid #eaeaea; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"/>
+  
+  ### 다크 모드 (Dark Mode)
+  <img src="image/darkmode.png" alt="Dark Mode Screenshot" width="80%" style="margin-bottom: 20px; border: 1px solid #333333; box-shadow: 0 4px 8px rgba(0,0,0,0.3);"/>
+</p>
 
 ## 주요 기능
 Lofi Workroom은 사용자 정의가 가능한 다양한 위젯을 제공하여 작업 효율을 높입니다.
